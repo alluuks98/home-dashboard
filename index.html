@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Home Dashboard</title>
+
+<style>
+:root {
+    --bg1: #0a0f1f;
+    --bg2: #111827;
+    --glass: rgba(255,255,255,0.08);
+    --border: rgba(255,255,255,0.15);
+    --text: #ffffff;
+    --muted: #9ca3af;
+    --accent: #3b82f6;
+    --active: #22c55e;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "SF Pro Display", system-ui, sans-serif;
+}
+
+body {
+    background:
+        radial-gradient(circle at top left,#1f2937,#0f172a 40%, #050816);
+    color: var(--text);
+    height: 100vh;
+    overflow: hidden;
+}
+
+.dashboard {
+    height: 100vh;
+    padding: 24px;
+    display: grid;
+    grid-template-columns: 1.4fr 1fr;
+    grid-template-rows: 220px 1fr;
+    gap: 20px;
+}
+
+.card {
+    background: var(--glass);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid var(--border);
+    border-radius: 28px;
+    box-shadow: 0 8px 32px rgba(0,0,0,.25);
+}
+
+/* CLOCK */
+
+.clock-card {
+    padding: 25px 35px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.time {
+    font-size: 6rem;
+    font-weight: 700;
+    letter-spacing: -3px;
+}
+
+.date {
+    color: var(--muted);
+    font-size: 1.5rem;
+    margin-top: 10px;
+}
+
+/* WEATHER */
+
+.weather-card {
+    padding: 25px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.weather-now {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.temp {
+    font-size: 4rem;
+    font-weight: 700;
+}
+
+.weather-location {
+    color: var(--muted);
+    font-size: 1rem;
+}
+
+.forecast {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 15px;
+}
+
+.day {
+    text-align: center;
+}
+
+.day-name {
+    color: var(--muted);
+    margin-bottom: 8px;
+}
+
+.day-temp {
+    font-size: 1.2rem;
+}
+
+/* TODO */
+
+.todo-card {
+    padding: 28px;
+    display: flex;
+    flex-direction: column;
+}
+
+.section-title {
+    font-size: 1.4rem;
+    margin-bottom: 20px;
+}
+
+.todo-list {
+    list-style: none;
+}
+
+.todo-list li {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 12px 0;
+    border-bottom: 1px solid rgba(255,255,255,.08);
+    font-size: 1.1rem;
+}
+
+.todo-list input {
+    width: 20px;
+    height: 20px;
+    accent-color: var(--active);
+}
+
+/* CONTROL PANEL */
+
+.controls {
+    display: grid;
+    grid-template-columns: repeat(3,1fr);
+    gap: 18px;
+}
+
+.widget {
+    cursor: pointer;
+    transition: .25s;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    border-radius: 24px;
+    background: rgba(255,255,255,.05);
+}
+
+.widget:hover {
+    transform: translateY(-3px);
+}
+
+.widget.active {
+    background: rgba(34,197,94,.25);
+    border: 1px solid rgba(34,197,94,.4);
+}
+
+.icon {
+    font-size: 3rem;
+}
+
+.label {
+    font-size: 1.15rem;
+}
+
+.bottom-grid {
+    display: grid;
+    grid-template-columns: 1.2fr 1fr;
+    gap: 20px;
+}
+
+</style>
+</head>
+<body>
+
+<div class="dashboard">
+
+    <!-- CLOCK -->
+    <div class="card clock-card">
+        <div id="time" class="time">12:00</div>
+        <div id="date" class="date"></div>
+    </div>
+
+    <!-- WEATHER -->
+    <div class="card weather-card">
+        <div class="weather-now">
+            <div>
+                <div class="weather-location">Kuopio</div>
+                <div class="temp">+8°</div>
+            </div>
+            <div style="font-size:4rem">☁️</div>
+        </div>
+
+        <div class="forecast">
+            <div class="day">
+                <div class="day-name">Ti</div>
+                <div class="day-temp">+7°</div>
+            </div>
+
+            <div class="day">
+                <div class="day-name">Ke</div>
+                <div class="day-temp">+5°</div>
+            </div>
+
+            <div class="day">
+                <div class="day-name">To</div>
+                <div class="day-temp">+4°</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="bottom-grid">
+
+        <!-- TODO -->
+        <div class="card todo-card">
+            <div class="section-title">🏠 Perheen yhteiset asiat</div>
+
+            <ul class="todo-list">
+                <li>
+                    <input type="checkbox">
+                    Vie roskat
+                </li>
+
+                <li>
+                    <input type="checkbox">
+                    Muista kauppa
+                </li>
+
+                <li>
+                    <input type="checkbox">
+                    Lasten harrastus klo 18
+                </li>
+
+                <li>
+                    <input type="checkbox">
+                    Tarkista postit
+                </li>
+
+                <li>
+                    <input type="checkbox">
+                    Kastele kasvit
+                </li>
+            </ul>
+        </div>
+
+        <!-- CONTROL WIDGETS -->
+        <div class="controls">
+
+            <div class="card widget" onclick="toggleWidget(this)">
+                <div class="icon">💡</div>
+                <div class="label">Valaistus</div>
+            </div>
+
+            <div class="card widget" onclick="toggleWidget(this)">
+                <div class="icon">🎵</div>
+                <div class="label">Musiikki</div>
+            </div>
+
+            <div class="card widget" onclick="toggleWidget(this)">
+                <div class="icon">🛡️</div>
+                <div class="label">Turvallisuus</div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+
+function updateClock() {
+    const now = new Date();
+
+    const time = now.toLocaleTimeString("fi-FI", {
+        hour: "2-digit",
+        minute: "2-digit"
+    });
+
+    const date = now.toLocaleDateString("fi-FI", {
+        weekday: "long",
+        day: "numeric",
+        month: "long",
+        year: "numeric"
+    });
+
+    document.getElementById("time").textContent = time;
+    document.getElementById("date").textContent =
+        date.charAt(0).toUpperCase() + date.slice(1);
+}
+
+setInterval(updateClock, 1000);
+updateClock();
+
+function toggleWidget(el) {
+    el.classList.toggle("active");
+}
+
+</script>
+
+</body>
+</html>
