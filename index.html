@@ -48,7 +48,15 @@ body { background: radial-gradient(circle at top left,#1f2937,#0f172a 40%, #0508
 .todo-list li { display: flex; align-items: center; gap: 12px; padding: 11px 0; border-bottom: 1px solid rgba(255,255,255,.08); font-size: 1.05rem; }
 .todo-list input[type="checkbox"] { flex: 0 0 auto; width: 20px; height: 20px; accent-color: var(--active); }
 .todo-text { flex: 1; overflow-wrap: anywhere; }
-.todo-list li.completed .todo-text { color: var(--muted); text-decoration: line-through; }
+.todo-text-btn {
+    flex: 1; background: transparent; border: none; color: var(--text);
+    text-align: left; padding: 0; cursor: text; font: inherit; overflow-wrap: anywhere;
+}
+.todo-list li.completed .todo-text-btn { color: var(--muted); text-decoration: line-through; }
+.todo-edit-input {
+    flex: 1; min-width: 0; padding: 8px 10px; border: 1px solid var(--border); border-radius: 8px;
+    background: rgba(255,255,255,.08); color: var(--text); font: inherit;
+}
 .todo-remove { border: 1px solid var(--border); border-radius: 8px; background: rgba(255,255,255,.06); color: var(--muted); cursor: pointer; padding: 5px 9px; font-size: 1rem; }
 .controls { display: grid; grid-template-columns: repeat(3,1fr); gap: 18px; }
 .widget { cursor: pointer; transition: .25s; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; border-radius: 24px; background: rgba(255,255,255,.05); }
@@ -128,8 +136,12 @@ const defaultTodos = ["Vie roskat", "Muista kauppa", "Lasten harrastus klo 18", 
 let todos;
 try {
     const savedTodos = localStorage.getItem("homeDashboardTodos");
-    todos = savedTodos ? JSON.parse(savedTodos) : defaultTodos.map((text) => ({ text, done: false }));
-    if (!Array.isArray(todos)) todos = defaultTodos.map((text) => ({ text, done: false }));
+    const parsed = savedTodos ? JSON.parse(savedTodos) : null;
+    if (Array.isArray(parsed) && parsed.length) {
+        todos = parsed.map((item) => ({ text: String(item?.text || "").trim(), done: Boolean(item?.done) })).filter((item) => item.text);
+    } else {
+        todos = defaultTodos.map((text) => ({ text, done: false }));
+    }
 } catch {
     todos = defaultTodos.map((text) => ({ text, done: false }));
 }
@@ -138,40 +150,76 @@ function saveTodos() {
     try { localStorage.setItem("homeDashboardTodos", JSON.stringify(todos)); } catch (error) { console.warn("Tehtävien tallennus ei onnistunut.", error); }
 }
 
+function saveTodoEdit(index, value) {
+    const text = value.trim();
+    if (!text) {
+        todos.splice(index, 1);
+    } else {
+        todos[index].text = text;
+    }
+    saveTodos();
+    renderTodos();
+}
+
 function renderTodos() {
     const list = document.getElementById("todoList");
     list.replaceChildren();
+
     todos.forEach((todo, index) => {
         const item = document.createElement("li");
         if (todo.done) item.classList.add("completed");
+
         const checkbox = document.createElement("input");
         checkbox.type = "checkbox";
-        checkbox.checked = Boolean(todo.done);
-        checkbox.setAttribute("aria-label", `Merkitse tehtävä ${todo.text} tehdyksi`);
+        checkbox.checked = todo.done;
         checkbox.addEventListener("change", () => {
             todos[index].done = checkbox.checked;
             saveTodos();
             renderTodos();
         });
-        const text = document.createElement("span");
-        text.className = "todo-text";
-        text.textContent = todo.text;
+
+        const content = document.createElement("button");
+        content.type = "button";
+        content.className = "todo-text-btn";
+        content.textContent = todo.text;
+        content.setAttribute("aria-label", `Muokkaa tehtävää: ${todo.text}`);
+        content.addEventListener("click", () => {
+            const editor = document.createElement("input");
+            editor.type = "text";
+            editor.value = todo.text;
+            editor.className = "todo-edit-input";
+            editor.setAttribute("aria-label", "Muokkaa tehtävää");
+            editor.addEventListener("keydown", (event) => {
+                if (event.key === "Enter") {
+                    saveTodoEdit(index, editor.value);
+                }
+                if (event.key === "Escape") {
+                    renderTodos();
+                }
+            });
+            editor.addEventListener("blur", () => saveTodoEdit(index, editor.value));
+            const parent = content.parentElement;
+            parent.replaceChild(editor, content);
+            editor.focus();
+            editor.select();
+        });
+
         const remove = document.createElement("button");
         remove.type = "button";
         remove.className = "todo-remove";
         remove.textContent = "Poista";
-        remove.setAttribute("aria-label", `Poista tehtävä ${todo.text}`);
         remove.addEventListener("click", () => {
             todos.splice(index, 1);
             saveTodos();
             renderTodos();
         });
-        item.append(checkbox, text, remove);
+
+        item.append(checkbox, content, remove);
         list.appendChild(item);
     });
 }
 
- document.getElementById("todoForm").addEventListener("submit", (event) => {
+document.getElementById("todoForm").addEventListener("submit", (event) => {
     event.preventDefault();
     const input = document.getElementById("todoInput");
     const text = input.value.trim();
