@@ -96,6 +96,22 @@ body {
     font-size: 1rem;
 }
 
+.location-button {
+    margin-top: 8px;
+    padding: 7px 10px;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background: rgba(255,255,255,.08);
+    color: var(--text);
+    cursor: pointer;
+}
+
+.location-status {
+    color: var(--muted);
+    font-size: .8rem;
+    margin-top: 6px;
+}
+
 .forecast {
     display: flex;
     justify-content: space-between;
@@ -206,7 +222,9 @@ body {
     <div class="card weather-card">
         <div class="weather-now">
             <div>
-                <div class="weather-location">Tampere</div>
+                <div id="weatherLocation" class="weather-location">Sijaintia ei valittu</div>
+                <button id="locationButton" class="location-button" type="button" onclick="requestLocation()">Käytä laitteen sijaintia</button>
+                <div id="locationStatus" class="location-status" aria-live="polite"></div>
                 <div class="temp">+8°</div>
             </div>
             <div style="font-size:4rem">☁️</div>
@@ -312,6 +330,40 @@ function updateClock() {
 
 setInterval(updateClock, 1000);
 updateClock();
+
+function requestLocation() {
+    const status = document.getElementById("locationStatus");
+    const locationLabel = document.getElementById("weatherLocation");
+
+    if (!navigator.geolocation) {
+        status.textContent = "Selaimesi ei tue sijainnin hakemista.";
+        return;
+    }
+
+    status.textContent = "Pyydetään sijaintilupaa…";
+
+    navigator.geolocation.getCurrentPosition(
+        (position) => {
+            const { latitude, longitude, accuracy } = position.coords;
+            locationLabel.textContent = `${latitude.toFixed(5)}, ${longitude.toFixed(5)}`;
+            status.textContent = `Sijainti saatu (tarkkuus noin ${Math.round(accuracy)} m).`;
+        },
+        (error) => {
+            if (error.code === error.PERMISSION_DENIED) {
+                status.textContent = "Sijaintilupaa ei annettu.";
+            } else if (error.code === error.POSITION_UNAVAILABLE) {
+                status.textContent = "Sijaintia ei saatu tällä hetkellä.";
+            } else {
+                status.textContent = "Sijainnin haku aikakatkaistiin. Yritä uudelleen.";
+            }
+        },
+        {
+            enableHighAccuracy: true,
+            timeout: 15000,
+            maximumAge: 0
+        }
+    );
+}
 
 function toggleWidget(el) {
     el.classList.toggle("active");
