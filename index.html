@@ -8,12 +8,12 @@
 :root { --glass:rgba(255,255,255,.08); --border:rgba(255,255,255,.15); --text:#fff; --muted:#9ca3af; --active:#22c55e; }
 * { box-sizing:border-box; margin:0; padding:0; font-family:"SF Pro Display",system-ui,sans-serif; }
 body { background:radial-gradient(circle at top left,#1f2937,#0f172a 40%,#050816); color:var(--text); min-height:100vh; }
-.dashboard { min-height:100vh; padding:24px; display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1.6fr); grid-template-rows:minmax(300px,auto) minmax(250px,1fr); gap:20px; }
+.dashboard { min-height:100vh; padding:24px; display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1.6fr); grid-template-rows:minmax(300px,auto) minmax(250px,1fr); grid-template-areas:"clock weather" "controls todo"; gap:20px; }
 .card { background:var(--glass); backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px); border:1px solid var(--border); border-radius:28px; box-shadow:0 8px 32px rgba(0,0,0,.25); }
-.clock-card { grid-column:1; grid-row:1; padding:25px 35px; display:flex; flex-direction:column; justify-content:center; }
+.clock-card { grid-area:clock; padding:25px 35px; display:flex; flex-direction:column; justify-content:center; }
 .time { font-size:clamp(4rem,8vw,6rem); font-weight:700; letter-spacing:-3px; }
 .date { color:var(--muted); font-size:1.5rem; margin-top:10px; }
-.weather-card { grid-column:2; grid-row:1; padding:28px; display:flex; flex-direction:column; gap:20px; min-width:0; }
+.weather-card { grid-area:weather; padding:28px; display:flex; flex-direction:column; gap:20px; min-width:0; }
 .weather-top { display:flex; align-items:center; justify-content:space-between; gap:16px; }
 .weather-location { color:var(--muted); font-size:1rem; overflow-wrap:anywhere; }
 .location-button,.todo-form button { margin-top:9px; padding:9px 12px; border:1px solid var(--border); border-radius:10px; background:rgba(255,255,255,.08); color:var(--text); cursor:pointer; }
@@ -31,9 +31,9 @@ body { background:radial-gradient(circle at top left,#1f2937,#0f172a 40%,#050816
 .hour-temp { font-size:1.2rem; font-weight:650; margin-bottom:7px; }
 .hour-rain { white-space:nowrap; }
 .rain-summary { color:var(--muted); font-size:.9rem; }
-/* Put the to-do card directly below weather, with the same column width. */
+/* Tehtäväkortti on sääkortin alla, samalla oikeanpuoleisella grid-sarakkeella. */
 .bottom-grid { display:contents; }
-.todo-card { grid-column:2; grid-row:2; padding:28px; display:flex; flex-direction:column; min-width:0; }
+.todo-card { grid-area:todo; padding:28px; display:flex; flex-direction:column; min-width:0; width:100%; }
 .section-title { font-size:1.4rem; margin-bottom:16px; }
 .todo-form { display:flex; gap:8px; margin-bottom:14px; }
 .todo-form input { flex:1; min-width:0; padding:11px 12px; border:1px solid var(--border); border-radius:10px; background:rgba(255,255,255,.08); color:var(--text); font-size:1rem; }
@@ -47,14 +47,13 @@ body { background:radial-gradient(circle at top left,#1f2937,#0f172a 40%,#050816
 .todo-list li.completed .todo-text { color:var(--muted); text-decoration:line-through; }
 .todo-edit-input { min-width:0; width:100%; padding:8px 10px; border:1px solid var(--border); border-radius:8px; background:rgba(255,255,255,.08); color:var(--text); font:inherit; }
 .todo-action { border:1px solid var(--border); border-radius:8px; background:rgba(255,255,255,.06); color:var(--muted); cursor:pointer; padding:6px 9px; font-size:.9rem; }
-.controls { grid-column:1; grid-row:2; display:grid; grid-template-columns:repeat(3,1fr); gap:18px; }
+.controls { grid-area:controls; display:grid; grid-template-columns:repeat(3,1fr); gap:18px; }
 .widget { cursor:pointer; transition:.25s; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:10px; border-radius:24px; background:rgba(255,255,255,.05); }
 .widget:hover { transform:translateY(-3px); }
 .widget.active { background:rgba(34,197,94,.25); border:1px solid rgba(34,197,94,.4); }
 .icon { font-size:3rem; } .label { font-size:1.15rem; }
 @media(max-width:800px) {
-  .dashboard { grid-template-columns:minmax(0,1fr); grid-template-rows:auto; padding:14px; }
-  .clock-card,.weather-card,.todo-card,.controls { grid-column:1; grid-row:auto; }
+  .dashboard { grid-template-columns:minmax(0,1fr); grid-template-rows:auto; grid-template-areas:"clock" "weather" "todo" "controls"; padding:14px; }
   .clock-card { min-height:200px; }
   .weather-card { min-height:310px; padding:20px; }
   .todo-card { min-height:280px; }
