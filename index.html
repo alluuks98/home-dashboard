@@ -38,20 +38,19 @@ body { background:radial-gradient(circle at top left,#1f2937,#0f172a 40%,#050816
 .todo-form input::placeholder { color:var(--muted); }
 .todo-form input:focus,.todo-edit-input:focus { outline:2px solid rgba(59,130,246,.7); outline-offset:1px; }
 .todo-form button { margin:0; padding-inline:16px; }
-.todo-list { list-style:none; overflow-y:auto; }
-.todo-list li { display:flex; align-items:center; gap:9px; padding:11px 0; border-bottom:1px solid rgba(255,255,255,.08); font-size:1.05rem; }
-.todo-list input[type=checkbox] { flex:0 0 auto; width:20px; height:20px; accent-color:var(--active); }
-.todo-text { flex:1; min-width:0; overflow-wrap:anywhere; white-space:normal; line-height:1.4; }
+.todo-list { list-style:none; overflow-y:auto; min-width:0; }
+.todo-list li { display:grid; grid-template-columns:22px minmax(0,1fr) auto auto; align-items:center; gap:10px; padding:11px 0; border-bottom:1px solid rgba(255,255,255,.08); font-size:1.05rem; }
+.todo-list input[type=checkbox] { width:20px; height:20px; accent-color:var(--active); justify-self:start; }
+.todo-text { min-width:0; overflow-wrap:anywhere; word-break:break-word; white-space:normal; line-height:1.4; }
 .todo-list li.completed .todo-text { color:var(--muted); text-decoration:line-through; }
-.todo-edit-input { flex:1; min-width:0; padding:8px 10px; border:1px solid var(--border); border-radius:8px; background:rgba(255,255,255,.08); color:var(--text); font:inherit; }
-.todo-action { flex:0 0 auto; border:1px solid var(--border); border-radius:8px; background:rgba(255,255,255,.06); color:var(--muted); cursor:pointer; padding:6px 9px; font-size:.9rem; }
+.todo-edit-input { min-width:0; width:100%; padding:8px 10px; border:1px solid var(--border); border-radius:8px; background:rgba(255,255,255,.08); color:var(--text); font:inherit; }
+.todo-action { border:1px solid var(--border); border-radius:8px; background:rgba(255,255,255,.06); color:var(--muted); cursor:pointer; padding:6px 9px; font-size:.9rem; }
 .controls { display:grid; grid-template-columns:repeat(3,1fr); gap:18px; }
 .widget { cursor:pointer; transition:.25s; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:10px; border-radius:24px; background:rgba(255,255,255,.05); }
 .widget:hover { transform:translateY(-3px); }
 .widget.active { background:rgba(34,197,94,.25); border:1px solid rgba(34,197,94,.4); }
 .icon { font-size:3rem; } .label { font-size:1.15rem; }
-/* Give the task list more horizontal room than the control widgets. */
-.bottom-grid { display:grid; grid-template-columns:minmax(0,1.8fr) minmax(220px,.8fr); gap:20px; min-height:250px; }
+.bottom-grid { display:grid; grid-template-columns:minmax(0,2.2fr) minmax(200px,.8fr); gap:20px; min-height:250px; }
 @media(max-width:800px) { .dashboard { grid-template-columns:1fr; grid-template-rows:auto; padding:14px; } .clock-card { min-height:200px; } .weather-card { min-height:310px; padding:20px; } .bottom-grid { grid-template-columns:1fr; } .todo-card { min-height:280px; } .controls { min-height:160px; } }
 </style>
 </head>
