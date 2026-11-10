@@ -18,44 +18,23 @@ body {
   isolation: isolate;
   color: var(--text);
   min-height: 100vh;
-  background: linear-gradient(180deg, #718b8b 0%, #a9b9ae 34%, #748c7d 68%, #263f36 100%);
+  background-color: #263f36;
+  background-image: linear-gradient(rgba(7, 18, 19, .28), rgba(7, 18, 19, .4)), url("Taustakuva.jpeg");
+  background-position: center center;
+  background-size: cover;
+  background-attachment: fixed;
+  background-repeat: no-repeat;
   overflow-x: hidden;
 }
-/* Dawn glow and slow horizontal layers of marsh mist. */
+/* Subtle mist overlay over the supplied landscape photo. */
 body::before {
   content: "";
   position: fixed;
   z-index: -1;
   inset: 0;
   pointer-events: none;
-  background:
-    radial-gradient(ellipse at 76% 18%, rgba(255, 231, 183, .72) 0%, rgba(255, 231, 183, .22) 9%, transparent 24%),
-    linear-gradient(180deg, transparent 26%, rgba(230, 237, 223, .36) 43%, transparent 56%),
-    linear-gradient(180deg, transparent 48%, rgba(231, 238, 222, .25) 61%, transparent 72%),
-    linear-gradient(180deg, transparent 60%, rgba(19, 46, 39, .55) 100%);
-  animation: mist-drift 32s ease-in-out infinite alternate;
+  background: linear-gradient(180deg, rgba(220, 232, 224, .08) 0%, transparent 32%, rgba(12, 31, 26, .18) 100%);
 }
-/* Layered bog shore, low pines, reeds and dark foreground. */
-body::after {
-  content: "";
-  position: fixed;
-  z-index: -1;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  height: 39vh;
-  min-height: 220px;
-  pointer-events: none;
-  background:
-    linear-gradient(180deg, transparent 0%, rgba(14, 38, 31, .12) 36%, rgba(8, 24, 21, .92) 100%),
-    radial-gradient(ellipse at 18% 68%, rgba(182, 164, 112, .42) 0 2%, transparent 2.4%),
-    radial-gradient(ellipse at 47% 54%, rgba(192, 183, 142, .35) 0 1.4%, transparent 1.9%),
-    linear-gradient(169deg, transparent 0 36%, rgba(62, 91, 72, .78) 36.5% 48%, transparent 48.5%),
-    linear-gradient(190deg, transparent 0 42%, rgba(31, 63, 49, .9) 42.5% 57%, transparent 57.5%),
-    linear-gradient(180deg, transparent 0 55%, rgba(16, 45, 37, .88) 55.5% 100%);
-  clip-path: polygon(0 13%, 8% 23%, 16% 9%, 25% 27%, 35% 17%, 45% 34%, 57% 13%, 67% 26%, 77% 11%, 88% 28%, 100% 12%, 100% 100%, 0 100%);
-}
-@keyframes mist-drift { from { transform: translateX(-1.5%); opacity: .78; } to { transform: translateX(1.5%); opacity: 1; } }
 .dashboard {
   min-height: 100vh;
   padding: 24px;
@@ -121,6 +100,7 @@ body::after {
 .icon { font-size: 3rem; }
 .label { font-size: 1.15rem; }
 @media (max-width: 800px) {
+  body { background-attachment: scroll; }
   .dashboard { grid-template-columns: minmax(0,1fr); grid-template-rows: auto; grid-template-areas: "clock" "weather" "todo" "controls"; padding: 14px; }
   .clock-card { min-height: 200px; }
   .weather-card { min-height: 310px; padding: 20px; }
@@ -178,8 +158,7 @@ function renderTodos() {
   todos.forEach((todo, index) => {
     const row = document.createElement("li");
     if (todo.done) row.classList.add("completed");
-    const checkbox = document.createElement("input");
-    checkbox.type = "checkbox"; checkbox.checked = todo.done;
+    const checkbox = document.createElement("input"); checkbox.type = "checkbox"; checkbox.checked = todo.done;
     checkbox.setAttribute("aria-label", `Merkitse tehtävä ${todo.text} tehdyksi`);
     checkbox.addEventListener("change", () => { todos[index].done = checkbox.checked; saveTodos(); renderTodos(); });
     const label = document.createElement("span"); label.className = "todo-text"; label.textContent = todo.text;
@@ -193,8 +172,7 @@ function renderTodos() {
   });
 }
 function beginTodoEdit(index, row, label) {
-  const editor = document.createElement("input");
-  editor.type = "text"; editor.maxLength = 120; editor.value = todos[index].text; editor.className = "todo-edit-input";
+  const editor = document.createElement("input"); editor.type = "text"; editor.maxLength = 120; editor.value = todos[index].text; editor.className = "todo-edit-input";
   editor.setAttribute("aria-label", "Muokkaa tehtävän tekstiä");
   let finished = false;
   const finish = save => {
@@ -247,8 +225,7 @@ async function loadWeather(latitude, longitude) {
     hours.forEach((time, offset) => {
       const i = start + offset; const chance = data.hourly.precipitation_probability[i] ?? 0; const rain = data.hourly.precipitation[i] ?? 0;
       maxChance = Math.max(maxChance, chance); totalRain += rain;
-      const weather = describeWeather(data.hourly.weather_code[i]);
-      const item = document.createElement("div"); item.className = "hour-item";
+      const weather = describeWeather(data.hourly.weather_code[i]); const item = document.createElement("div"); item.className = "hour-item";
       const timeLabel = document.createElement("div"); timeLabel.className = "hour-time"; timeLabel.textContent = new Date(time).toLocaleTimeString("fi-FI", { hour: "2-digit", minute: "2-digit" });
       const icon = document.createElement("div"); icon.className = "hour-icon"; icon.textContent = weather.icon;
       const temp = document.createElement("div"); temp.className = "hour-temp"; temp.textContent = `${Math.round(data.hourly.temperature_2m[i])}°`;
