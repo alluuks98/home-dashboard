@@ -6,10 +6,10 @@
 <title>Home Dashboard</title>
 <style>
 :root {
-  --glass: rgba(15, 30, 35, .58);
-  --border: rgba(225, 239, 230, .2);
+  --glass: rgba(12, 20, 22, 0.46);
+  --border: rgba(255, 255, 255, 0.18);
   --text: #fffdf5;
-  --muted: #d3ddd4;
+  --muted: #edf0e6;
   --active: #22c55e;
 }
 * { box-sizing: border-box; margin: 0; padding: 0; font-family: "SF Pro Display", system-ui, sans-serif; }
@@ -18,22 +18,22 @@ body {
   isolation: isolate;
   color: var(--text);
   min-height: 100vh;
-  background-color: #263f36;
-  background-image: linear-gradient(rgba(7, 18, 19, .28), rgba(7, 18, 19, .4)), url("Taustakuva.jpeg");
+  background-color: #1d2f2d;
+  background-image: url("Taustakuva.jpeg");
   background-position: center center;
-  background-size: cover;
-  background-attachment: fixed;
   background-repeat: no-repeat;
+  background-size: cover;
   overflow-x: hidden;
 }
-/* Subtle mist overlay over the supplied landscape photo. */
 body::before {
   content: "";
   position: fixed;
-  z-index: -1;
   inset: 0;
+  z-index: -1;
   pointer-events: none;
-  background: linear-gradient(180deg, rgba(220, 232, 224, .08) 0%, transparent 32%, rgba(12, 31, 26, .18) 100%);
+  background: linear-gradient(180deg, rgba(255,255,255,0.08) 0%, rgba(18,23,21,0.08) 33%, rgba(8,12,14,0.3) 100%);
+  backdrop-filter: blur(0.5px);
+  -webkit-backdrop-filter: blur(0.5px);
 }
 .dashboard {
   min-height: 100vh;
@@ -94,7 +94,7 @@ body::before {
 .todo-edit-input { min-width: 0; width: 100%; padding: 8px 10px; border: 1px solid var(--border); border-radius: 8px; background: rgba(255,255,255,.1); color: var(--text); font: inherit; }
 .todo-action { padding: 7px 10px; font-size: .9rem; }
 .controls { grid-area: controls; display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
-.widget { cursor: pointer; transition: .25s; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; border-radius: 24px; background: rgba(15, 30, 35, .52); }
+.widget { cursor: pointer; transition: .25s; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; border-radius: 24px; background: rgba(15, 30, 35, .45); }
 .widget:hover { transform: translateY(-3px); }
 .widget.active { background: rgba(34,197,94,.28); border: 1px solid rgba(34,197,94,.5); }
 .icon { font-size: 3rem; }
@@ -107,7 +107,6 @@ body::before {
   .todo-card { min-height: 280px; }
   .controls { min-height: 160px; }
 }
-@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; scroll-behavior: auto !important; } }
 </style>
 </head>
 <body>
